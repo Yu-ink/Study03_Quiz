@@ -69,3 +69,18 @@ function validateQuestions(questions) {
   });
   return errors;
 }
+
+// 보기를 섞은 복사본을 만든다. 정답 위치는 정답 보기의 "내용"을 따라 다시 계산한다.
+function prepareQuestion(q, random = Math.random) {
+  const correctText = q.choices[q.answer];
+  const choices = shuffle(q.choices, random);
+  return Object.assign({}, q, { choices, answer: choices.indexOf(correctText) });
+}
+
+// 카테고리의 문항을 섞어서 한 판(최대 10문항)을 만든다.
+function buildRound(questions, category, random = Math.random) {
+  const pool = questions.filter(q => q.category === category);
+  return shuffle(pool, random)
+    .slice(0, QUESTIONS_PER_ROUND)
+    .map(q => prepareQuestion(q, random));
+}

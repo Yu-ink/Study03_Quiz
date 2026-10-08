@@ -117,3 +117,52 @@ test('validateQuestions: 각 문항의 오류도 함께 모은다', () => {
   set[0].answer = 9;
   assertEqual(validateQuestions(set).length, 1);
 });
+
+// ---- prepareQuestion / buildRound ----
+
+test('prepareQuestion: 보기를 섞고 정답 위치를 정답 보기 내용에 맞춰 다시 계산한다', () => {
+  const q = makeQuestion({ choices: ['A', 'B', 'C', 'D'], answer: 0 });
+  const prepared = prepareQuestion(q, () => 0); // shuffle 결과 [B, C, D, A]
+  assertEqual(prepared.choices, ['B', 'C', 'D', 'A']);
+  assertEqual(prepared.answer, 3);
+});
+
+test('prepareQuestion: 원본 문항을 바꾸지 않는다', () => {
+  const q = makeQuestion({ choices: ['A', 'B', 'C', 'D'], answer: 1 });
+  prepareQuestion(q, () => 0);
+  assertEqual(q.choices, ['A', 'B', 'C', 'D']);
+  assertEqual(q.answer, 1);
+});
+
+test('prepareQuestion: 무작위로 섞어도 정답 보기 내용은 그대로다', () => {
+  const q = makeQuestion({ choices: ['A', 'B', 'C', 'D'], answer: 2 });
+  for (let i = 0; i < 20; i++) {
+    const prepared = prepareQuestion(q);
+    assertEqual(prepared.choices[prepared.answer], 'C');
+  }
+});
+
+function makePool() {
+  const history = Array.from({ length: 12 }, (_, i) => makeQuestion({ id: `h-${i}`, category: '한국사' }));
+  const science = Array.from({ length: 3 }, (_, i) => makeQuestion({ id: `s-${i}`, category: '과학' }));
+  return history.concat(science);
+}
+
+test('buildRound: 고른 카테고리 문항만 최대 10개 고른다', () => {
+  const round = buildRound(makePool(), '한국사');
+  assertEqual(round.length, 10);
+  assert(round.every(q => q.category === '한국사'), '다른 카테고리 문항이 섞임');
+  assertEqual(new Set(round.map(q => q.id)).size, 10);
+});
+
+test('buildRound: 문항이 10개보다 적으면 있는 만큼만 고른다', () => {
+  assertEqual(buildRound(makePool(), '과학').length, 3);
+});
+
+test('buildRound: 모든 문항의 정답 보기 내용이 원본과 같다', () => {
+  const pool = makePool();
+  buildRound(pool, '한국사').forEach(q => {
+    const original = pool.find(p => p.id === q.id);
+    assertEqual(q.choices[q.answer], original.choices[original.answer], q.id);
+  });
+});
