@@ -17,14 +17,14 @@
 
 ### 2.1 파일
 
-앱 파일은 아래 4개뿐입니다. `PRD.md`, `docs/`와 개발용 테스트 파일(`tests.html`, `tests/`)은 개수에 넣지 않습니다. 테스트 파일이 없어도 앱은 동작합니다.
+앱 파일은 아래 4개뿐입니다. 문서(`PRD.md`, `IMPL-PLAN.md`, `CLAUDE.md`, `docs/`)는 개수에 넣지 않습니다. 점검 코드는 `script.js` 안에 두므로 별도 테스트 파일이 없습니다.
 
 | 파일 | 역할 |
 |---|---|
 | `index.html` | 화면 4개(`<section>`)의 구조를 담고, 스크립트를 `questions.js`, `script.js` 순서로 불러옴 |
 | `style.css` | 모든 스타일 |
-| `script.js` | 상태, 화면 전환, 채점, 타이머, 힌트, 순위표, 문항 데이터 검사 |
-| `questions.js` | 문항 40개를 담은 전역 상수 `QUESTIONS` |
+| `script.js` | 상태, 화면 전환, 채점, 타이머, 힌트, 순위표, 문항 데이터 검사, 자체 점검(`runSelfChecks`) |
+| `questions.js` | 문항 40개를 담은 전역 상수 `QUESTIONS`. 맨 끝에 Node 점검용 `module.exports` 한 줄 |
 
 ### 2.2 기술 제약
 
@@ -33,6 +33,8 @@
 - 외부 라이브러리, 빌드 도구, 네트워크 요청을 쓰지 않습니다. 해설의 출처 링크를 여는 것은 예외입니다.
 - 대상 브라우저는 최신 Chrome과 Edge입니다.
 - 버튼은 모두 `<button>` 요소로 만들어서 키보드(Tab, Enter)로도 조작할 수 있게 합니다.
+- 개발 중 점검은 Node.js(LTS)로 `node script.js`를 실행합니다. 앱을 쓰는 데는 Node가 필요 없습니다.
+  - `questions.js` 끝의 `if (typeof module !== "undefined") module.exports = QUESTIONS;`는 Node에서만 실행되고 브라우저에서는 건너뜁니다. ES 모듈이 아니므로 `file://` 실행에 영향이 없습니다.
 
 ### 2.3 범위 밖
 
@@ -230,20 +232,24 @@ const state = {
 ```
 
 - 주요 함수(한 함수는 한 가지 일만 합니다)
-  - `showScreen(name)`: 화면 전환
-  - `startGame(category, mode, questions, isRetry)`: 판 시작
-  - `renderQuestion()`
-  - `handleAnswer(choiceIndex)`
-  - `handleTimeout()`
-  - `useHint()`
-  - `nextQuestion()`
-  - `showResult()`
-  - `startRetry()`
-  - `startTimer()`, `stopTimer()`
-  - `loadBoards()`, `saveRecord(category, mode, score)`: 저장한 기록의 순위나 `null`을 돌려줌
-  - `renderLeaderboard(category, mode)`
-  - `shuffle(array)`, `formatScore(score)`
-  - `validateQuestions(questions)`
+  - 순수 함수(DOM을 쓰지 않음, 자체 점검 대상)
+    - `shuffle(array)`, `formatScore(score)`
+    - `validateQuestion(q)`, `validateQuestions(questions)`
+    - `prepareQuestion(q)`, `buildRound(questions, category)`
+    - `scoreForAnswer(isCorrect, hintUsed)`: 1 / 0.5 / 0
+    - `pickHintRemovals(q)`: 힌트로 지울 오답 위치 2개
+    - `buildRetryRound(questions, wrongIds)`: 틀린 문항만으로 만든 판
+  - 화면 함수
+    - `showScreen(name)`: 화면 전환
+    - `startGame(questions, isRetry)`: 판 시작. `startNewRound()`, `startRetry()`가 부름
+    - `renderQuestion()`, `handleAnswer(choiceIndex)`, `handleTimeout()`, `useHint()`, `nextQuestion()`, `showResult()`
+    - `startTimer(seconds)`, `stopTimer()`
+    - `loadBoards()`, `saveRecord(category, mode, score)`: 저장한 기록의 순위나 `null`을 돌려줌 (3단계)
+    - `renderLeaderboard(category, mode)` (3단계)
+  - 자체 점검
+    - `runSelfChecks(questions)`: 순수 함수와 실제 문항 데이터 점검
+    - `printSelfCheckResults(results)`: 결과 출력
+  - 맨 끝의 실행 분기: 브라우저에서는 `initApp()`, Node에서는 자체 점검만 실행
 
 ## 9. 구현 단계
 
@@ -255,9 +261,18 @@ const state = {
 
 ## 10. 검증
 
-### 10.0 자동 테스트 (개발용)
+### 10.0 자체 점검 (개발용)
 
-`tests.html`을 브라우저에서 열면 `script.js`의 순수 함수(섞기, 점수 표시, 문항 검사, 판 만들기)와 실제 `QUESTIONS` 데이터를 검사합니다. 결과는 페이지와 탭 제목(`PASS (n/n)` 또는 `FAIL (...)`)에 나옵니다.
+`script.js` 안의 `runSelfChecks()`에 순수 함수 점검과 실제 `QUESTIONS` 데이터 점검이 들어 있습니다. 터미널에서 Node.js 명령 한 줄로 실행하며, 브라우저 없이 동작합니다.
+
+```bash
+node script.js
+```
+
+- 모두 통과하면 마지막 줄에 `PASS (통과/전체)`를 출력하고 종료 코드 0으로 끝납니다.
+- 하나라도 실패하면 `✗ 항목 — 이유`와 `FAIL (통과/전체)`를 출력하고 종료 코드 1로 끝납니다.
+- 단계마다 완료 기준은 이 점검의 통과와 10.2 수동 체크리스트입니다.
+- 브라우저에서 `index.html`을 열 때는 자체 점검이 실행되지 않습니다.
 
 ### 10.1 문항 데이터 자동 검사
 
