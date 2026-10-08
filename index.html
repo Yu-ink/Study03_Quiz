@@ -9,6 +9,7 @@
 <body>
   <main class="app">
     <section id="screen-start" class="screen">
+      <p class="student-info"><span>학번 2602488</span><span>권유진</span></p>
       <h1>상식 퀴즈</h1>
       <h2>카테고리</h2>
       <div id="category-list" class="option-list">
@@ -17,18 +18,39 @@
         <button class="option" data-category="과학" aria-pressed="false">과학</button>
         <button class="option" data-category="예술과 문화" aria-pressed="false">예술과 문화</button>
       </div>
-      <p class="mode-info">연습 모드 · <strong>순위표에 기록되지 않음</strong></p>
-      <button id="start-button" class="primary" disabled>시작</button>
+      <button id="start-button" class="primary" disabled>다음</button>
+    </section>
+
+    <section id="screen-mode" class="screen" hidden>
+      <h2 id="mode-title">퀴즈 모드를 고르세요</h2>
+      <div id="mode-list" class="mode-list">
+        <button class="mode-card" data-mode="practice">
+          <span class="mode-name">연습</span>
+          <span class="mode-desc">시간 제한과 힌트 없음, 맞히면 1점</span>
+          <span class="badge">순위표에 기록되지 않음</span>
+        </button>
+        <button class="mode-card" data-mode="speed">
+          <span class="mode-name">스피드</span>
+          <span class="mode-desc">문항마다 15초, 시간이 지나면 오답</span>
+        </button>
+        <button class="mode-card" data-mode="hint">
+          <span class="mode-name">힌트</span>
+          <span class="mode-desc">문항마다 힌트 1번, 힌트를 쓰고 맞히면 0.5점</span>
+        </button>
+      </div>
+      <button id="mode-back-button">뒤로</button>
     </section>
 
     <section id="screen-quiz" class="screen" hidden>
       <header class="quiz-header">
         <span id="quiz-progress"></span>
         <span id="quiz-score"></span>
+        <span id="quiz-timer" class="timer" hidden></span>
         <button id="quit-button" class="link">처음으로</button>
       </header>
       <h2 id="question-text"></h2>
       <div id="choice-list" class="choice-list"></div>
+      <button id="hint-button" class="hint-button" hidden>힌트</button>
       <div id="feedback" class="feedback" hidden>
         <p id="feedback-verdict" class="verdict"></p>
         <p id="feedback-explanation"></p>
@@ -41,9 +63,11 @@
       <h1>결과</h1>
       <p id="result-title"></p>
       <p id="result-score" class="result-score"></p>
-      <p class="mode-info"><strong>순위표에 기록되지 않음</strong></p>
+      <p id="result-all-correct" class="all-correct" hidden>모두 맞혔어요</p>
+      <p id="result-unranked" class="mode-info"><strong>순위표에 기록되지 않음</strong></p>
       <div class="button-row">
-        <button id="replay-button" class="primary">다시 하기</button>
+        <button id="retry-button" class="primary" hidden>틀린 문제 다시 풀기</button>
+        <button id="replay-button">다시 하기</button>
         <button id="home-button">처음으로</button>
       </div>
     </section>

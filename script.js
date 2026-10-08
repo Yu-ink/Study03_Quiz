@@ -85,20 +85,51 @@ function buildRound(questions, category, random = Math.random) {
     .map(q => prepareQuestion(q, random));
 }
 
+// 한 문항의 점수. 맞히면 1점, 힌트를 쓰고 맞히면 0.5점, 틀리거나 시간 초과면 0점. (PRD 5장)
+function scoreForAnswer(isCorrect, hintUsed) {
+  if (!isCorrect) return 0;
+  return hintUsed ? 0.5 : 1;
+}
+
+// 힌트로 지울 오답 위치 2개. 정답 위치는 절대 고르지 않는다. (PRD 5.2)
+function pickHintRemovals(q, random = Math.random) {
+  const wrongIndexes = [0, 1, 2, 3].filter(i => i !== q.answer);
+  return shuffle(wrongIndexes, random).slice(0, 2);
+}
+
+// 틀린 문항만 다시 섞어서 만든 판. 보기도 새로 섞는다. (PRD 6장)
+function buildRetryRound(questions, wrongIds, random = Math.random) {
+  const pool = questions.filter(q => wrongIds.includes(q.id));
+  return shuffle(pool, random).map(q => prepareQuestion(q, random));
+}
+
 // ---- 여기부터 화면 (DOM) ----
 
-// 모드별 차이는 이 표에 모은다. 1단계는 연습만 있다. (PRD 5장)
+// 모드별 차이는 이 표에 모은다. (PRD 5장)
 const MODES = {
-  practice: { label: "연습", timeLimit: null, hint: false, ranked: false },
+  practice: { label: "연습",   timeLimit: null, hint: false, ranked: false },
+  speed:    { label: "스피드", timeLimit: 15,   hint: false, ranked: true  },
+  hint:     { label: "힌트",   timeLimit: null, hint: true,  ranked: true  },
 };
 
 const state = {
   category: null,
   mode: "practice",
-  questions: [], // 이번 판 문항 (섞인 순서, 섞인 보기)
-  index: 0,      // 현재 문항 위치
+  questions: [],   // 이번 판 문항 (섞인 순서, 섞인 보기)
+  index: 0,        // 현재 문항 위치
   score: 0,
+  wrongIds: [],    // 이번 판에서 틀린 문항 id
+  isRetry: false,  // 다시 풀기 판인지
+  hintUsed: false, // 현재 문항에서 힌트를 썼는지
+  timerId: null,
+  timeLeft: 0,
 };
+
+// 예: "한국사 · 연습" / "한국사 · 연습 · 다시 풀기"
+function roundLabel() {
+  const base = `${state.category} · ${MODES[state.mode].label}`;
+  return state.isRetry ? `${base} · 다시 풀기` : base;
+}
 
 function byId(id) {
   return document.getElementById(id);
@@ -118,8 +149,33 @@ function selectCategory(category) {
   byId("start-button").disabled = false;
 }
 
-function startGame() {
-  state.questions = buildRound(QUESTIONS, state.category);
+// 카테고리를 고른 뒤 [다음]을 누르면 모드 선택 화면으로 간다.
+function showModeScreen() {
+  byId("mode-title").textContent = `${state.category} · 퀴즈 모드를 고르세요`;
+  showScreen("mode");
+  document.querySelector("#mode-list .mode-card").focus();
+}
+
+function selectMode(mode) {
+  state.mode = mode;
+  startNewRound();
+}
+
+// 같은 카테고리와 모드로 새 판을 시작한다. ([다시 하기]도 이 함수를 쓴다)
+function startNewRound() {
+  startGame(buildRound(QUESTIONS, state.category), false);
+}
+
+// 방금 판에서 틀린 문항만 다시 푼다. (연습 모드)
+function startRetry() {
+  startGame(buildRetryRound(QUESTIONS, state.wrongIds), true);
+}
+
+function startGame(questions, isRetry) {
+  stopTimer();
+  state.questions = questions;
+  state.isRetry = isRetry;
+  state.wrongIds = [];
   state.index = 0;
   state.score = 0;
   showScreen("quiz");
@@ -129,7 +185,7 @@ function startGame() {
 function renderQuestion() {
   const q = state.questions[state.index];
   byId("quiz-progress").textContent =
-    `${state.category} · ${MODES[state.mode].label} · ${state.index + 1}/${state.questions.length}`;
+    `${roundLabel()} · ${state.index + 1}/${state.questions.length}`;
   byId("quiz-score").textContent = `점수 ${formatScore(state.score)}`;
   byId("question-text").textContent = q.question;
 
@@ -143,18 +199,80 @@ function renderQuestion() {
     list.appendChild(button);
   });
   byId("feedback").hidden = true;
+
+  const mode = MODES[state.mode];
+  state.hintUsed = false;
+  const hintButton = byId("hint-button");
+  hintButton.hidden = !mode.hint;
+  hintButton.disabled = false;
+
+  byId("quiz-timer").hidden = mode.timeLimit === null;
+  if (mode.timeLimit !== null) startTimer(mode.timeLimit);
 }
 
-function handleAnswer(choiceIndex) {
-  const q = state.questions[state.index];
-  const isCorrect = choiceIndex === q.answer;
-  if (isCorrect) state.score += 1;
+// ---- 스피드 모드 타이머 (PRD 5.1) ----
 
+function renderTimer() {
+  const timer = byId("quiz-timer");
+  timer.textContent = `남은 시간 ${state.timeLeft}초`;
+  timer.classList.toggle("urgent", state.timeLeft <= 5);
+}
+
+function startTimer(seconds) {
+  stopTimer();
+  state.timeLeft = seconds;
+  renderTimer();
+  state.timerId = setInterval(() => {
+    state.timeLeft -= 1;
+    renderTimer();
+    if (state.timeLeft <= 0) handleTimeout();
+  }, 1000);
+}
+
+function stopTimer() {
+  if (state.timerId !== null) clearInterval(state.timerId);
+  state.timerId = null;
+}
+
+// 0초가 되면 오답 처리: 보기를 잠그고 정답만 초록으로 표시한다.
+function handleTimeout() {
+  stopTimer();
+  state.wrongIds.push(state.questions[state.index].id);
+  lockChoices(null);
+  showFeedback("시간 초과", false);
+}
+
+// ---- 힌트 모드 (PRD 5.2) ----
+
+function useHint() {
+  const q = state.questions[state.index];
+  const buttons = byId("choice-list").querySelectorAll(".choice");
+  pickHintRemovals(q).forEach(i => {
+    buttons[i].disabled = true;
+    buttons[i].classList.add("removed");
+  });
+  state.hintUsed = true;
+  byId("hint-button").disabled = true;
+}
+
+// 보기를 모두 잠그고 정답은 초록, 고른 오답은 빨강으로 표시한다.
+function lockChoices(choiceIndex) {
+  const q = state.questions[state.index];
   byId("choice-list").querySelectorAll(".choice").forEach((button, i) => {
     button.disabled = true;
     if (i === q.answer) button.classList.add("correct");
     else if (i === choiceIndex) button.classList.add("wrong");
   });
+  byId("hint-button").disabled = true;
+}
+
+function handleAnswer(choiceIndex) {
+  const q = state.questions[state.index];
+  const isCorrect = choiceIndex === q.answer;
+  stopTimer();
+  state.score += scoreForAnswer(isCorrect, state.hintUsed);
+  if (!isCorrect) state.wrongIds.push(q.id);
+  lockChoices(choiceIndex);
   showFeedback(isCorrect ? "정답" : "오답", isCorrect);
 }
 
@@ -188,13 +306,32 @@ function nextQuestion() {
 }
 
 function showResult() {
-  byId("result-title").textContent = `${state.category} · ${MODES[state.mode].label}`;
-  byId("result-score").textContent = `${formatScore(state.score)} / ${state.questions.length}`;
+  stopTimer();
+  const total = state.questions.length;
+  byId("result-title").textContent = roundLabel();
+
+  if (state.isRetry) {
+    // 다시 풀기 판은 맞힌 개수만 보여 준다. 처음 판의 점수는 바뀌지 않는다.
+    const correct = total - state.wrongIds.length;
+    byId("result-score").textContent = `${total}문제 중 ${correct}개 맞힘`;
+  } else {
+    byId("result-score").textContent = `${formatScore(state.score)} / ${total}`;
+  }
+  byId("result-score").classList.toggle("small", state.isRetry);
+
+  const allCorrect = state.isRetry && state.wrongIds.length === 0;
+  byId("result-all-correct").hidden = !allCorrect;
+  byId("result-unranked").hidden = MODES[state.mode].ranked;
+  // 틀린 문제 다시 풀기는 연습 모드에만 있다.
+  byId("retry-button").hidden = state.mode !== "practice" || state.wrongIds.length === 0;
   showScreen("result");
 }
 
 function quitGame() {
-  if (confirm("그만두면 기록이 저장되지 않아요. 처음으로 갈까요?")) showScreen("start");
+  if (confirm("그만두면 기록이 저장되지 않아요. 처음으로 갈까요?")) {
+    stopTimer();
+    showScreen("start");
+  }
 }
 
 function initApp() {
@@ -203,10 +340,16 @@ function initApp() {
   document.querySelectorAll("#category-list .option").forEach(button => {
     button.addEventListener("click", () => selectCategory(button.dataset.category));
   });
-  byId("start-button").addEventListener("click", startGame);
+  byId("start-button").addEventListener("click", showModeScreen);
+  document.querySelectorAll("#mode-list .mode-card").forEach(button => {
+    button.addEventListener("click", () => selectMode(button.dataset.mode));
+  });
+  byId("mode-back-button").addEventListener("click", () => showScreen("start"));
+  byId("hint-button").addEventListener("click", useHint);
   byId("next-button").addEventListener("click", nextQuestion);
   byId("quit-button").addEventListener("click", quitGame);
-  byId("replay-button").addEventListener("click", startGame);
+  byId("replay-button").addEventListener("click", startNewRound);
+  byId("retry-button").addEventListener("click", startRetry);
   byId("home-button").addEventListener("click", () => showScreen("start"));
   showScreen("start");
 }

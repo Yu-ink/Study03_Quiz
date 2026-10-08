@@ -49,7 +49,7 @@
 | 단계 | 내용 | 상태 | 상세 계획 |
 |---|---|---|---|
 | 1 | 연습 모드와 점수 | ✅ 완료 (2026-10-08) | [2026-10-08-quiz-stage1.md](docs/superpowers/plans/2026-10-08-quiz-stage1.md) |
-| 2 | 스피드 모드, 힌트 모드, 틀린 문제 다시 풀기 (모드 선택 화면 포함) | 진행 중 (계획 완료, 구현 전) | [2026-10-08-quiz-stage2.md](docs/superpowers/plans/2026-10-08-quiz-stage2.md) |
+| 2 | 스피드 모드, 힌트 모드, 틀린 문제 다시 풀기 (모드 선택 화면 포함) | 구현 완료 (사용자 확인 대기) | [2026-10-08-quiz-stage2.md](docs/superpowers/plans/2026-10-08-quiz-stage2.md) |
 | 3 | 점수 저장과 순위표 | 예정 | 3단계 시작 전에 writing-plans로 작성 |
 
 ---

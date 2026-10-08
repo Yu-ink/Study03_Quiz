@@ -10,6 +10,7 @@
   --correct-bg: #dafbe1;
   --wrong: #cf222e;
   --wrong-bg: #ffebe9;
+  --badge-bg: #fff4d4;
 }
 
 * { box-sizing: border-box; }
@@ -62,4 +63,21 @@ button:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
 .source { color: var(--muted); font-size: 0.9em; }
 
 .result-score { font-size: 2.5em; font-weight: 700; margin: 8px 0; }
-.button-row { display: flex; gap: 8px; }
+.button-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.mode-list { display: grid; gap: 12px; margin-bottom: 16px; }
+.mode-card { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left; padding: 14px 20px; border-radius: 12px; }
+.mode-card:hover { border-color: var(--primary); }
+.mode-name { font-weight: 700; }
+.mode-desc { color: var(--muted); font-size: 0.95em; }
+.badge { margin-top: 4px; padding: 0 8px; border-radius: 6px; background: var(--badge-bg); font-size: 0.9em; }
+
+.timer { font-weight: 600; color: var(--text); white-space: nowrap; }
+.timer.urgent { color: var(--wrong); }
+.hint-button { margin-top: 12px; }
+.choice.removed { opacity: 0.25; text-decoration: line-through; }
+
+.student-info { display: flex; gap: 12px; margin: 0 0 8px; color: var(--muted); font-weight: 600; }
+.result-score.small { font-size: 1.6em; }
+.all-correct { color: var(--correct); font-weight: 700; }
+#start-button { margin-top: 16px; }
