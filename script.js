@@ -84,3 +84,132 @@ function buildRound(questions, category, random = Math.random) {
     .slice(0, QUESTIONS_PER_ROUND)
     .map(q => prepareQuestion(q, random));
 }
+
+// ---- 여기부터 화면 (DOM) ----
+
+// 모드별 차이는 이 표에 모은다. 1단계는 연습만 있다. (PRD 5장)
+const MODES = {
+  practice: { label: "연습", timeLimit: null, hint: false, ranked: false },
+};
+
+const state = {
+  category: null,
+  mode: "practice",
+  questions: [], // 이번 판 문항 (섞인 순서, 섞인 보기)
+  index: 0,      // 현재 문항 위치
+  score: 0,
+};
+
+function byId(id) {
+  return document.getElementById(id);
+}
+
+function showScreen(name) {
+  document.querySelectorAll(".screen").forEach(section => {
+    section.hidden = section.id !== `screen-${name}`;
+  });
+}
+
+function selectCategory(category) {
+  state.category = category;
+  document.querySelectorAll("#category-list .option").forEach(button => {
+    button.setAttribute("aria-pressed", String(button.dataset.category === category));
+  });
+  byId("start-button").disabled = false;
+}
+
+function startGame() {
+  state.questions = buildRound(QUESTIONS, state.category);
+  state.index = 0;
+  state.score = 0;
+  showScreen("quiz");
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = state.questions[state.index];
+  byId("quiz-progress").textContent =
+    `${state.category} · ${MODES[state.mode].label} · ${state.index + 1}/${state.questions.length}`;
+  byId("quiz-score").textContent = `점수 ${formatScore(state.score)}`;
+  byId("question-text").textContent = q.question;
+
+  const list = byId("choice-list");
+  list.replaceChildren();
+  q.choices.forEach((choice, i) => {
+    const button = document.createElement("button");
+    button.className = "choice";
+    button.textContent = choice;
+    button.addEventListener("click", () => handleAnswer(i));
+    list.appendChild(button);
+  });
+  byId("feedback").hidden = true;
+}
+
+function handleAnswer(choiceIndex) {
+  const q = state.questions[state.index];
+  const isCorrect = choiceIndex === q.answer;
+  if (isCorrect) state.score += 1;
+
+  byId("choice-list").querySelectorAll(".choice").forEach((button, i) => {
+    button.disabled = true;
+    if (i === q.answer) button.classList.add("correct");
+    else if (i === choiceIndex) button.classList.add("wrong");
+  });
+  showFeedback(isCorrect ? "정답" : "오답", isCorrect);
+}
+
+// 정답 여부, 해설, 출처, [다음] 버튼을 보여 준다.
+function showFeedback(verdict, isCorrect) {
+  const q = state.questions[state.index];
+  byId("quiz-score").textContent = `점수 ${formatScore(state.score)}`;
+
+  const verdictText = byId("feedback-verdict");
+  verdictText.textContent = verdict;
+  verdictText.className = isCorrect ? "verdict correct" : "verdict wrong";
+  byId("feedback-explanation").textContent = q.explanation;
+
+  const link = byId("feedback-source");
+  link.textContent = q.source.name;
+  link.href = q.source.url;
+
+  const isLast = state.index === state.questions.length - 1;
+  byId("next-button").textContent = isLast ? "결과 보기" : "다음";
+  byId("feedback").hidden = false;
+  byId("next-button").focus();
+}
+
+function nextQuestion() {
+  if (state.index === state.questions.length - 1) {
+    showResult();
+    return;
+  }
+  state.index += 1;
+  renderQuestion();
+}
+
+function showResult() {
+  byId("result-title").textContent = `${state.category} · ${MODES[state.mode].label}`;
+  byId("result-score").textContent = `${formatScore(state.score)} / ${state.questions.length}`;
+  showScreen("result");
+}
+
+function quitGame() {
+  if (confirm("그만두면 기록이 저장되지 않아요. 처음으로 갈까요?")) showScreen("start");
+}
+
+function initApp() {
+  validateQuestions(QUESTIONS).forEach(error => console.error(`[문항 검사] ${error}`));
+
+  document.querySelectorAll("#category-list .option").forEach(button => {
+    button.addEventListener("click", () => selectCategory(button.dataset.category));
+  });
+  byId("start-button").addEventListener("click", startGame);
+  byId("next-button").addEventListener("click", nextQuestion);
+  byId("quit-button").addEventListener("click", quitGame);
+  byId("replay-button").addEventListener("click", startGame);
+  byId("home-button").addEventListener("click", () => showScreen("start"));
+  showScreen("start");
+}
+
+// tests.html에는 시작 화면이 없으므로 앱을 띄우지 않고 함수만 쓴다.
+if (document.getElementById("screen-start")) initApp();

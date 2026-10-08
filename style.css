@@ -1,0 +1,65 @@
+:root {
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --text: #1f2328;
+  --muted: #59636e;
+  --line: #d1d9e0;
+  --primary: #0969da;
+  --selected-bg: #ddf4ff;
+  --correct: #1a7f37;
+  --correct-bg: #dafbe1;
+  --wrong: #cf222e;
+  --wrong-bg: #ffebe9;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, "Malgun Gothic", sans-serif;
+  line-height: 1.6;
+}
+
+.app { max-width: 640px; margin: 32px auto; padding: 0 16px; }
+.screen { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+h1 { margin-top: 0; }
+
+button {
+  font: inherit;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  cursor: pointer;
+}
+button:disabled { cursor: default; opacity: 0.5; }
+button:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+.link { border: none; background: none; color: var(--primary); padding: 4px 8px; }
+
+.option-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.option[aria-pressed="true"] { border-color: var(--primary); background: var(--selected-bg); font-weight: 600; }
+.mode-info { color: var(--muted); }
+
+.quiz-header { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; color: var(--muted); }
+#quiz-score, #quit-button { white-space: nowrap; }
+#quit-button { margin-left: auto; }
+
+.choice-list { display: grid; gap: 8px; }
+.choice { text-align: left; }
+.choice:disabled { opacity: 0.6; }
+.choice.correct { opacity: 1; border-color: var(--correct); background: var(--correct-bg); color: var(--correct); font-weight: 600; }
+.choice.wrong { opacity: 1; border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); font-weight: 600; }
+
+.feedback { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+.verdict { font-size: 1.2em; font-weight: 700; margin: 0; }
+.verdict.correct { color: var(--correct); }
+.verdict.wrong { color: var(--wrong); }
+.source { color: var(--muted); font-size: 0.9em; }
+
+.result-score { font-size: 2.5em; font-weight: 700; margin: 8px 0; }
+.button-row { display: flex; gap: 8px; }
