@@ -92,4 +92,96 @@ const QUESTIONS = [
     explanation: "대한민국 임시 정부는 1919년 4월 11일 중국 상하이에서 수립되었다.",
     source: { name: "한국민족문화대백과사전 「대한민국 임시정부」", url: "https://encykorea.aks.ac.kr/Article/E0015017" }
   },
+
+  // ---- 세계지리 ----
+  {
+    id: "geography-01",
+    category: "세계지리",
+    question: "2026년 현재, 국토 면적 기준으로 세계에서 가장 넓은 나라는?",
+    choices: ["러시아", "캐나다", "중국", "미국"],
+    answer: 0,
+    explanation: "러시아는 세계에서 가장 넓은 나라로, 두 번째로 넓은 캐나다의 거의 두 배 면적이다.",
+    source: { name: "브리태니커 백과사전 「Russia」", url: "https://www.britannica.com/place/Russia" }
+  },
+  {
+    id: "geography-02",
+    category: "세계지리",
+    question: "오스트레일리아의 수도는?",
+    choices: ["캔버라", "시드니", "멜버른", "퍼스"],
+    answer: 0,
+    explanation: "오스트레일리아 연방의 수도는 시드니나 멜버른이 아니라 캔버라다.",
+    source: { name: "브리태니커 백과사전 「Canberra」", url: "https://www.britannica.com/place/Canberra" }
+  },
+  {
+    id: "geography-03",
+    category: "세계지리",
+    question: "2026년 현재, 해발고도(해수면으로부터의 높이) 기준으로 세계에서 가장 높은 산은?",
+    choices: ["에베레스트산", "K2", "칸첸중가", "데날리"],
+    answer: 0,
+    explanation: "에베레스트산은 해발 8,849m로 세계에서 가장 높은 산이다.",
+    source: { name: "브리태니커 백과사전 「Mount Everest」", url: "https://www.britannica.com/place/Mount-Everest" }
+  },
+  {
+    id: "geography-04",
+    category: "세계지리",
+    question: "안데스산맥이 있는 대륙은?",
+    choices: ["남아메리카", "아프리카", "유럽", "오세아니아"],
+    answer: 0,
+    explanation: "안데스산맥은 남아메리카의 산맥으로, 대륙 남쪽 끝에서 카리브해 연안까지 약 8,900km 이어진다.",
+    source: { name: "브리태니커 백과사전 「Andes Mountains」", url: "https://www.britannica.com/place/Andes-Mountains" }
+  },
+  {
+    id: "geography-05",
+    category: "세계지리",
+    question: "캐나다의 수도는?",
+    choices: ["오타와", "토론토", "밴쿠버", "몬트리올"],
+    answer: 0,
+    explanation: "캐나다의 수도는 온타리오주 남동부에 있는 오타와다.",
+    source: { name: "브리태니커 백과사전 「Ottawa」", url: "https://www.britannica.com/place/Ottawa" }
+  },
+  {
+    id: "geography-06",
+    category: "세계지리",
+    question: "아프리카 북동부를 지나 북쪽으로 흐르다가 지중해로 흘러드는 강은?",
+    choices: ["나일강", "아마존강", "갠지스강", "미시시피강"],
+    answer: 0,
+    explanation: "나일강은 적도 남쪽에서 시작해 아프리카 북동부를 거쳐 북쪽으로 흐르다가 지중해로 들어간다.",
+    source: { name: "브리태니커 백과사전 「Nile River」", url: "https://www.britannica.com/place/Nile-River" }
+  },
+  {
+    id: "geography-07",
+    category: "세계지리",
+    question: "2026년 현재, 면적 기준으로 세계에서 가장 넓은 대양은?",
+    choices: ["태평양", "대서양", "인도양", "북극해"],
+    answer: 0,
+    explanation: "태평양은 가장 넓은 대양으로, 다음으로 넓은 대서양의 두 배 면적이며 지구 표면의 약 3분의 1을 차지한다.",
+    source: { name: "브리태니커 백과사전 「Pacific Ocean」", url: "https://www.britannica.com/place/Pacific-Ocean" }
+  },
+  {
+    id: "geography-08",
+    category: "세계지리",
+    question: "브라질에서 나라 전역에 걸쳐 쓰이는 언어는?",
+    choices: ["포르투갈어", "스페인어", "영어", "프랑스어"],
+    answer: 0,
+    explanation: "브라질에서는 포르투갈어가 나라 전역에서 쓰이며, 아마존 유역의 일부 원주민 공동체는 원주민 언어도 쓴다.",
+    source: { name: "브리태니커 백과사전 「Brazil」", url: "https://www.britannica.com/place/Brazil" }
+  },
+  {
+    id: "geography-09",
+    category: "세계지리",
+    question: "사하라 사막이 있는 대륙은?",
+    choices: ["아프리카", "아시아", "오세아니아", "남아메리카"],
+    answer: 0,
+    explanation: "사하라 사막은 아프리카 북부를 거의 다 채우고 있는 사막이다.",
+    source: { name: "브리태니커 백과사전 「Sahara」", url: "https://www.britannica.com/place/Sahara-desert-Africa" }
+  },
+  {
+    id: "geography-10",
+    category: "세계지리",
+    question: "튀르키예의 수도는?",
+    choices: ["앙카라", "이스탄불", "이즈미르", "안탈리아"],
+    answer: 0,
+    explanation: "튀르키예의 수도는 이스탄불이 아니라 1923년에 수도로 선포된 앙카라다.",
+    source: { name: "브리태니커 백과사전 「Ankara」", url: "https://www.britannica.com/place/Ankara" }
+  },
 ];
