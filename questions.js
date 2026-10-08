@@ -184,4 +184,96 @@ const QUESTIONS = [
     explanation: "튀르키예의 수도는 이스탄불이 아니라 1923년에 수도로 선포된 앙카라다.",
     source: { name: "브리태니커 백과사전 「Ankara」", url: "https://www.britannica.com/place/Ankara" }
   },
+
+  // ---- 과학 ----
+  {
+    id: "science-01",
+    category: "과학",
+    question: "물의 화학식은?",
+    choices: ["H₂O", "CO₂", "O₂", "NaCl"],
+    answer: 0,
+    explanation: "물 분자는 수소와 산소로 이루어지며 화학식은 H₂O다.",
+    source: { name: "브리태니커 백과사전 「water」", url: "https://www.britannica.com/science/water" }
+  },
+  {
+    id: "science-02",
+    category: "과학",
+    question: "2026년 현재 태양계 행성 중, 태양과의 평균 거리 기준으로 태양에 가장 가까운 행성은?",
+    choices: ["수성", "금성", "지구", "화성"],
+    answer: 0,
+    explanation: "수성은 태양에서 평균 약 5,800만 km(0.4 AU) 떨어져 있어 태양에 가장 가까운 행성이다.",
+    source: { name: "NASA Science 「Mercury: Facts」", url: "https://science.nasa.gov/mercury/facts/" }
+  },
+  {
+    id: "science-03",
+    category: "과학",
+    question: "원자 번호가 1번인 원소는?",
+    choices: ["수소", "헬륨", "탄소", "산소"],
+    answer: 0,
+    explanation: "수소는 원소 기호 H, 원자 번호 1번인 원소다.",
+    source: { name: "브리태니커 백과사전 「hydrogen」", url: "https://www.britannica.com/science/hydrogen" }
+  },
+  {
+    id: "science-04",
+    category: "과학",
+    question: "식물이 빛 에너지를 이용해 이산화탄소와 물로 탄수화물과 산소를 만드는 과정은?",
+    choices: ["광합성", "호흡", "증산", "발효"],
+    answer: 0,
+    explanation: "광합성은 녹색 식물 등이 빛 에너지를 이용해 이산화탄소와 물을 탄수화물과 산소로 바꾸는 과정이다.",
+    source: { name: "브리태니커 백과사전 「photosynthesis」", url: "https://www.britannica.com/science/photosynthesis" }
+  },
+  {
+    id: "science-05",
+    category: "과학",
+    question: "진공에서 빛의 속력은 약 얼마인가?",
+    choices: ["초속 약 30만 km", "초속 약 300km", "초속 약 3만 km", "초속 약 3,000만 km"],
+    answer: 0,
+    explanation: "진공에서 빛의 속력은 초속 299,792,458m(약 30만 km)로 정해진 값이다.",
+    source: { name: "NIST 「speed of light in vacuum」", url: "https://physics.nist.gov/cgi-bin/cuu/Value?c" }
+  },
+  {
+    id: "science-06",
+    category: "과학",
+    question: "1953년 DNA의 이중 나선 구조를 밝혀낸 두 과학자는?",
+    choices: ["왓슨과 크릭", "퀴리 부부", "다윈과 월리스", "뉴턴과 핼리"],
+    answer: 0,
+    explanation: "제임스 왓슨과 프랜시스 크릭은 로절린드 프랭클린과 모리스 윌킨스의 연구를 바탕으로 1953년 DNA 이중 나선 구조를 밝혔다.",
+    source: { name: "브리태니커 백과사전 「double helix」", url: "https://www.britannica.com/science/double-helix" }
+  },
+  {
+    id: "science-07",
+    category: "과학",
+    question: "해수면 높이에서 물이 끓는 온도는 섭씨 몇 도인가?",
+    choices: ["100°C", "0°C", "50°C", "212°C"],
+    answer: 0,
+    explanation: "해수면 높이에서 물은 섭씨 100도(화씨 212도)에서 끓는다.",
+    source: { name: "브리태니커 백과사전 「boiling point」", url: "https://www.britannica.com/science/boiling-point" }
+  },
+  {
+    id: "science-08",
+    category: "과학",
+    question: "2026년 현재 태양계 행성 중, 질량 기준으로 가장 큰 행성은?",
+    choices: ["목성", "토성", "해왕성", "지구"],
+    answer: 0,
+    explanation: "목성은 태양계에서 가장 큰 행성으로, 태양계의 다른 천체를 모두 합친 것의 두 배가 넘는 물질을 가지고 있다.",
+    source: { name: "NASA Science 「Jupiter: Facts」", url: "https://science.nasa.gov/jupiter/facts/" }
+  },
+  {
+    id: "science-09",
+    category: "과학",
+    question: "사람의 혈액에서 폐의 산소를 온몸의 조직으로 나르는 세포는?",
+    choices: ["적혈구", "백혈구", "혈소판", "신경 세포"],
+    answer: 0,
+    explanation: "적혈구는 철을 포함한 단백질인 헤모글로빈으로 산소와 결합해, 폐에서 온몸의 조직으로 산소를 나른다.",
+    source: { name: "브리태니커 백과사전 「red blood cell」", url: "https://www.britannica.com/science/red-blood-cell" }
+  },
+  {
+    id: "science-10",
+    category: "과학",
+    question: "소리가 전달되지 않는 곳은?",
+    choices: ["진공", "물", "공기", "철"],
+    answer: 0,
+    explanation: "소리는 공기나 물 같은 물질 속 압력파로 전달되므로, 물질이 없는 진공에서는 전달되지 않는다.",
+    source: { name: "NASA Cosmicopia 「Energy Traveling Through Space」", url: "https://cosmicopia.gsfc.nasa.gov/qa_sp_en.html" }
+  },
 ];
