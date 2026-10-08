@@ -11,3 +11,8 @@ function checkCategory(category) {
 checkCategory('한국사');
 checkCategory('세계지리');
 checkCategory('과학');
+checkCategory('예술과 문화');
+
+TestHarness.test('QUESTIONS 전체가 validateQuestions를 통과한다 (40문항, id 중복 없음)', () => {
+  TestHarness.assertEqual(validateQuestions(QUESTIONS), []);
+});

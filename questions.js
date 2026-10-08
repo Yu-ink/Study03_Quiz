@@ -276,4 +276,96 @@ const QUESTIONS = [
     explanation: "소리는 공기나 물 같은 물질 속 압력파로 전달되므로, 물질이 없는 진공에서는 전달되지 않는다.",
     source: { name: "NASA Cosmicopia 「Energy Traveling Through Space」", url: "https://cosmicopia.gsfc.nasa.gov/qa_sp_en.html" }
   },
+
+  // ---- 예술과 문화 ----
+  {
+    id: "culture-01",
+    category: "예술과 문화",
+    question: "파리 루브르 박물관에 있는 '모나리자'를 그린 화가는?",
+    choices: ["레오나르도 다빈치", "미켈란젤로", "라파엘로", "렘브란트"],
+    answer: 0,
+    explanation: "'모나리자'는 레오나르도 다빈치가 1503~1519년 사이에 그린 유화로, 지금은 파리 루브르 박물관에 있다.",
+    source: { name: "브리태니커 백과사전 「Mona Lisa」", url: "https://www.britannica.com/topic/Mona-Lisa-painting" }
+  },
+  {
+    id: "culture-02",
+    category: "예술과 문화",
+    question: "1889년 6월 생레미에서 그린 '별이 빛나는 밤'의 화가는?",
+    choices: ["빈센트 반 고흐", "클로드 모네", "폴 고갱", "폴 세잔"],
+    answer: 0,
+    explanation: "'별이 빛나는 밤'은 빈센트 반 고흐가 1889년 6월 프랑스 생레미에서 그린 작품이다.",
+    source: { name: "뉴욕 현대미술관(MoMA) 「The Starry Night」", url: "https://www.moma.org/collection/works/79802" }
+  },
+  {
+    id: "culture-03",
+    category: "예술과 문화",
+    question: "'합창 교향곡'이라고도 불리는 교향곡 9번 라단조(작품 125)의 작곡가는?",
+    choices: ["베토벤", "모차르트", "하이든", "슈베르트"],
+    answer: 0,
+    explanation: "베토벤의 교향곡 9번은 마지막 악장에서 합창과 독창자가 실러의 시 「환희의 송가」를 노래해 '합창 교향곡'으로도 불린다.",
+    source: { name: "브리태니커 백과사전 「Symphony No. 9 in D Minor, Op. 125」", url: "https://www.britannica.com/topic/Symphony-No-9-in-D-Minor" }
+  },
+  {
+    id: "culture-04",
+    category: "예술과 문화",
+    question: "희곡 『로미오와 줄리엣』을 쓴 작가는?",
+    choices: ["윌리엄 셰익스피어", "괴테", "몰리에르", "입센"],
+    answer: 0,
+    explanation: "『로미오와 줄리엣』은 윌리엄 셰익스피어가 1594~1596년 무렵에 쓴 희곡이다.",
+    source: { name: "브리태니커 백과사전 「Romeo and Juliet」", url: "https://www.britannica.com/topic/Romeo-and-Juliet" }
+  },
+  {
+    id: "culture-05",
+    category: "예술과 문화",
+    question: "창자 한 사람이 고수의 북장단에 맞추어 이야기를 소리와 아니리로 엮고 발림을 곁들여 구연하는 전통 공연 예술은?",
+    choices: ["판소리", "산조", "탈춤", "사물놀이"],
+    answer: 0,
+    explanation: "판소리는 한 명의 창자가 고수의 북장단에 맞추어 서사적인 이야기를 소리와 아니리로 엮어 발림을 곁들이며 구연하는 전통 공연 예술이다.",
+    source: { name: "한국민족문화대백과사전 「판소리」", url: "https://encykorea.aks.ac.kr/Article/E0059663" }
+  },
+  {
+    id: "culture-06",
+    category: "예술과 문화",
+    question: "소설 『돈키호테』를 쓴 작가는?",
+    choices: ["미겔 데 세르반테스", "단테 알리기에리", "빅토르 위고", "레프 톨스토이"],
+    answer: 0,
+    explanation: "『돈키호테』는 미겔 데 세르반테스의 소설로, 1605년과 1615년 두 부분으로 나뉘어 스페인어로 출간되었다.",
+    source: { name: "브리태니커 백과사전 「Don Quixote」", url: "https://www.britannica.com/topic/Don-Quixote-fictional-character" }
+  },
+  {
+    id: "culture-07",
+    category: "예술과 문화",
+    question: "석굴암과 불국사가 유네스코 세계유산에 등재된 해는?",
+    choices: ["1995년", "1988년", "2000년", "2010년"],
+    answer: 0,
+    explanation: "석굴암과 불국사는 1995년에 유네스코 세계유산으로 등재되었다.",
+    source: { name: "유네스코 세계유산센터 「Seokguram Grotto and Bulguksa Temple」", url: "https://whc.unesco.org/en/list/736" }
+  },
+  {
+    id: "culture-08",
+    category: "예술과 문화",
+    question: "오페라 '라 트라비아타'를 작곡한 사람은?",
+    choices: ["주세페 베르디", "자코모 푸치니", "리하르트 바그너", "조아키노 로시니"],
+    answer: 0,
+    explanation: "'라 트라비아타'는 주세페 베르디의 3막 오페라로, 1853년 3월 6일 베네치아 라 페니체 극장에서 초연되었다.",
+    source: { name: "브리태니커 백과사전 「La traviata」", url: "https://www.britannica.com/topic/La-traviata" }
+  },
+  {
+    id: "culture-09",
+    category: "예술과 문화",
+    question: "'인상주의'라는 이름이 유래한 클로드 모네의 작품은?",
+    choices: ["인상, 해돋이", "수련", "건초 더미", "루앙 대성당"],
+    answer: 0,
+    explanation: "비평가 루이 르루아가 모네의 '인상, 해돋이'를 혹평하며 전시회를 '인상주의자들의 전시회'라 부른 데서 인상주의라는 이름이 나왔다.",
+    source: { name: "브리태니커 백과사전 「Impression, Sunrise」", url: "https://www.britannica.com/topic/Impression-Sunrise" }
+  },
+  {
+    id: "culture-10",
+    category: "예술과 문화",
+    question: "「인왕제색도」와 「금강전도」를 그린 조선 후기 화가는?",
+    choices: ["정선", "김홍도", "신윤복", "장승업"],
+    answer: 0,
+    explanation: "겸재 정선은 「인왕제색도」, 「금강전도」 등을 그린 조선 후기 화가로, 조선의 실제 자연을 담은 진경산수화를 개척했다.",
+    source: { name: "한국민족문화대백과사전 「정선」", url: "https://encykorea.aks.ac.kr/Article/E0050379" }
+  },
 ];
